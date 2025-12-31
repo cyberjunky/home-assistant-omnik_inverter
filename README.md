@@ -32,9 +32,7 @@ All sensors are created by default and grouped under a single device for easy ma
 
 ## Screenshots
 
-| Setup Dialog | Sensors Overview |
-|:---:|:---:|
-| ![Setup Dialog](screenshots/omnik-setup.png) | ![Sensors](screenshots/omnik-sensors.png) |
+![Setup Dialog](screenshots/omnik-setup.png) ![Sensors](screenshots/omnik-sensors.png)
 
 ## Requirements
 
