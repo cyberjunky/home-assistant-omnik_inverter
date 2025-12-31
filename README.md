@@ -70,9 +70,9 @@ This integration is not yet in the default HACS repository. You need to add it a
 2. Click **+ Add Integration**
 3. Search for **"Omnik Inverter"**
 4. Enter your configuration:
-   - **Host**: Your inverter's IP address (e.g., `192.168.2.129`)
+   - **Host**: Your inverter's IP address (e.g., `192.168.1.111`)
    - **Port**: Default is `8899`
-   - **Serial Number**: Your inverter's serial number (e.g., `602696253`)
+   - **Serial Number**: Your inverter's serial number (e.g., `602111111`)
    - **Name**: Friendly name prefix (default: "Omnik")
    - **Update Interval**: Seconds between updates (default: `60`)
 
@@ -92,7 +92,7 @@ Changes apply immediately. To enable/disable individual sensors, click on the se
 
 ## Advanced Usage
 
-### Automation Example
+### Automation Examples
 
 Monitor inverter status changes:
 

@@ -1,7 +1,7 @@
 {
   "domain": "omnik_inverter",
   "name": "Omnik Inverter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "documentation": "https://github.com/cyberjunky/home-assistant-omnik_inverter/blob/master/README.md",
   "issue_tracker": "https://github.com/cyberjunky/home-assistant-omnik_inverter/issues",
   "codeowners": [
