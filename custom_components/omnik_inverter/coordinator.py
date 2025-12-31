@@ -26,7 +26,7 @@ class OmnikDataUpdateCoordinator(DataUpdateCoordinator[OmnikInverterData]):
         self.inverter = OmnikInverter(
             host=entry.data[CONF_HOST],
             port=entry.data[CONF_PORT],
-            serial_number=entry.data[CONF_SERIAL_NUMBER],
+            serial_number=int(entry.data[CONF_SERIAL_NUMBER]),
         )
 
         # Get scan interval from options, fall back to default

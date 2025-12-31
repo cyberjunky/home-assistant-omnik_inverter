@@ -30,6 +30,12 @@ Monitor your Omnik Solar inverter with these sensors:
 
 All sensors are created by default and grouped under a single device for easy management.
 
+## Screenshots
+
+| Setup Dialog | Sensors Overview |
+|:---:|:---:|
+| ![Setup Dialog](screenshots/omnik-setup.png) | ![Sensors](screenshots/omnik-sensors.png) |
+
 ## Requirements
 
 - **Omnik Solar Inverter** with network connectivity
@@ -41,15 +47,16 @@ All sensors are created by default and grouped under a single device for easy ma
 
 ### HACS (Recommended)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=cyberjunky&repository=home-assistant-omnik_inverter&category=integration)
-
-Alternatively:
+This integration is not yet in the default HACS repository. You need to add it as a custom repository first:
 
 1. Install [HACS](https://hacs.xyz) if not already installed
-2. Search for "Omnik Inverter" in HACS
-3. Click **Download**
-4. Restart Home Assistant
-5. Add via Settings → Devices & Services
+2. Open HACS in Home Assistant
+3. Click the **⋮** menu (top right) → **Custom repositories**
+4. Add `https://github.com/cyberjunky/home-assistant-omnik_inverter` with category **Integration**
+5. Search for "Omnik Inverter" in HACS
+6. Click **Download**
+7. Restart Home Assistant
+8. Add via Settings → Devices & Services
 
 ### Manual Installation
 

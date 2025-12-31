@@ -24,7 +24,6 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from .omnik import OmnikConnectionError, OmnikInverter
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,43 +37,27 @@ class OmnikInverterConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the initial step."""
-        errors: dict[str, str] = {}
-
         if user_input is not None:
-            # Validate connection
-            inverter = OmnikInverter(
-                host=user_input[CONF_HOST],
-                port=user_input[CONF_PORT],
-                serial_number=user_input[CONF_SERIAL_NUMBER],
+            # Create unique ID based on serial number
+            await self.async_set_unique_id(str(user_input[CONF_SERIAL_NUMBER]))
+            self._abort_if_unique_id_configured()
+
+            # Store connection details in data, user preferences in options
+            # Note: No connection test - inverter may be offline (e.g., at night)
+            # The coordinator will handle unavailability gracefully
+            return self.async_create_entry(
+                title=user_input.get(CONF_NAME, DEFAULT_NAME),
+                data={
+                    CONF_HOST: user_input[CONF_HOST],
+                    CONF_PORT: user_input[CONF_PORT],
+                    CONF_SERIAL_NUMBER: int(user_input[CONF_SERIAL_NUMBER]),
+                },
+                options={
+                    CONF_SCAN_INTERVAL: user_input.get(
+                        CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                    ),
+                },
             )
-
-            try:
-                await inverter.async_test_connection()
-            except OmnikConnectionError as err:
-                _LOGGER.error("Failed to connect to inverter: %s", err)
-                errors["base"] = "cannot_connect"
-            except Exception:
-                _LOGGER.exception("Unexpected exception")
-                errors["base"] = "unknown"
-            else:
-                # Create unique ID based on serial number
-                await self.async_set_unique_id(str(user_input[CONF_SERIAL_NUMBER]))
-                self._abort_if_unique_id_configured()
-
-                # Store connection details in data, user preferences in options
-                return self.async_create_entry(
-                    title=user_input.get(CONF_NAME, DEFAULT_NAME),
-                    data={
-                        CONF_HOST: user_input[CONF_HOST],
-                        CONF_PORT: user_input[CONF_PORT],
-                        CONF_SERIAL_NUMBER: user_input[CONF_SERIAL_NUMBER],
-                    },
-                    options={
-                        CONF_SCAN_INTERVAL: user_input.get(
-                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                        ),
-                    },
-                )
 
         # Show configuration form
         return self.async_show_form(
@@ -116,22 +99,17 @@ class OmnikInverterConfigFlow(ConfigFlow, domain=DOMAIN):
                     ),
                 }
             ),
-            errors=errors,
         )
 
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
         """Get the options flow for this handler."""
-        return OmnikInverterOptionsFlow(config_entry)
+        return OmnikInverterOptionsFlow()
 
 
 class OmnikInverterOptionsFlow(OptionsFlow):
     """Handle options flow for Omnik Inverter."""
-
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None

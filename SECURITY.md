@@ -10,19 +10,18 @@ If you discover a security vulnerability in this integration, please report it p
 
 ### Network Communication
 
-This integration communicates with rooted Toon thermostats over your local network (HTTP):
+This integration communicates with your Omnik Inverter over your local network (TCP):
 
-- Ensure your Toon device is only accessible from trusted networks
+- Ensure your Omnik Inverter is only accessible from trusted networks
 - Keep your Home Assistant instance on a secure network
-- Consider using firewall rules to restrict access to your Toon device
+- Consider using firewall rules to restrict access to your Omnik Inverter
 
 ### Credential Storage
 
-Toon device connection details (IP, port) are stored in Home Assistant's configuration:
+Omnik Inverter connection details (IP, port, Serialnumber) are stored in Home Assistant's configuration:
 
-- Keep your `configuration.yaml` and Home Assistant configuration secure
+- Keep your Home Assistant configuration secure
 - Do not share your Home Assistant backups without sanitizing sensitive data
-- Rooted Toon devices may have default or weak passwords—change them if applicable
 
 ### Best Practices
 
