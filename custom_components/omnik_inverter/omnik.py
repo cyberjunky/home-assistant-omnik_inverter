@@ -15,6 +15,10 @@ _LOGGER = logging.getLogger(__name__)
 # Minimum expected message length for valid response
 MIN_MESSAGE_LENGTH = 80
 
+# Retry configuration for transient connection issues
+MAX_RETRIES = 3
+RETRY_DELAY_SECONDS = 2
+
 
 class OmnikConnectionError(Exception):
     """Exception raised when connection to inverter fails."""
@@ -102,8 +106,8 @@ class OmnikInverter:
 
         return bytes(request_data)
 
-    async def _async_fetch_data(self) -> bytes:
-        """Fetch raw data from the inverter.
+    async def _async_single_fetch(self) -> bytes:
+        """Perform a single fetch attempt from the inverter.
 
         Returns:
             Raw bytes received from the inverter
@@ -156,6 +160,45 @@ class OmnikInverter:
         finally:
             writer.close()
             await writer.wait_closed()
+
+    async def _async_fetch_data(self) -> bytes:
+        """Fetch raw data from the inverter with retry logic.
+
+        Retries up to MAX_RETRIES times with RETRY_DELAY_SECONDS between attempts
+        to handle transient WiFi connection issues.
+
+        Returns:
+            Raw bytes received from the inverter
+
+        Raises:
+            OmnikConnectionError: If all connection attempts fail
+        """
+        last_error: OmnikConnectionError | None = None
+
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                return await self._async_single_fetch()
+            except OmnikConnectionError as err:
+                last_error = err
+                if attempt < MAX_RETRIES:
+                    _LOGGER.debug(
+                        "Connection attempt %d/%d failed: %s. Retrying in %ds...",
+                        attempt,
+                        MAX_RETRIES,
+                        err,
+                        RETRY_DELAY_SECONDS,
+                    )
+                    await asyncio.sleep(RETRY_DELAY_SECONDS)
+                else:
+                    _LOGGER.debug(
+                        "Connection attempt %d/%d failed: %s. No more retries.",
+                        attempt,
+                        MAX_RETRIES,
+                        err,
+                    )
+
+        # All retries exhausted
+        raise last_error  # type: ignore[misc]
 
     def _get_string(self, begin: int, end: int) -> str | None:
         """Extract string from message.
@@ -243,12 +286,10 @@ class OmnikInverter:
                 ac_output_power=None,
             )
 
-        # Check if inverter is operational (temperature is valid indicator)
+        # Parse temperature (filter out invalid readings > 150°C)
         temperature = self._get_short(31)
         if temperature is not None and temperature > 150:
             temperature = None
-
-        is_online = temperature is not None
 
         # Parse actual power
         actual_power_raw = self._get_short(59, 1)
@@ -262,11 +303,13 @@ class OmnikInverter:
         ac_power_raw = self._get_short(59, 1)
         ac_output_power = int(ac_power_raw) if ac_power_raw is not None else None
 
+        # Status is "Online" because we successfully received data via TCP connection
+        # "Offline" status is only set by the coordinator when connection fails
         return OmnikInverterData(
             serial_number=self._get_string(15, 31),
-            status="Online" if is_online else "Offline",
+            status="Online",
             temperature=temperature,
-            actual_power=actual_power if is_online else 0,
+            actual_power=actual_power,
             energy_today=self._get_short(69, 100),
             energy_total=self._get_long(71),
             hours_total=hours_total,
