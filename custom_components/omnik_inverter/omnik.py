@@ -40,11 +40,23 @@ class OmnikInverterData:
     energy_total: float | None
     hours_total: int | None
     dc_input_voltage: float | None
+    dc_input_voltage_2: float | None
+    dc_input_voltage_3: float | None
     dc_input_current: float | None
+    dc_input_current_2: float | None
+    dc_input_current_3: float | None
     ac_output_voltage: float | None
+    ac_output_voltage_2: float | None
+    ac_output_voltage_3: float | None
     ac_output_current: float | None
+    ac_output_current_2: float | None
+    ac_output_current_3: float | None
     ac_output_frequency: float | None
+    ac_output_frequency_2: float | None
+    ac_output_frequency_3: float | None
     ac_output_power: int | None
+    ac_output_power_2: int | None
+    ac_output_power_3: int | None
 
 
 class OmnikInverter:
@@ -279,11 +291,23 @@ class OmnikInverter:
                 energy_total=None,
                 hours_total=None,
                 dc_input_voltage=None,
+                dc_input_voltage_2=None,
+                dc_input_voltage_3=None,
                 dc_input_current=None,
+                dc_input_current_2=None,
+                dc_input_current_3=None,
                 ac_output_voltage=None,
+                ac_output_voltage_2=None,
+                ac_output_voltage_3=None,
                 ac_output_current=None,
+                ac_output_current_2=None,
+                ac_output_current_3=None,
                 ac_output_frequency=None,
+                ac_output_frequency_2=None,
+                ac_output_frequency_3=None,
                 ac_output_power=None,
+                ac_output_power_2=None,
+                ac_output_power_3=None,
             )
 
         # Parse temperature (filter out invalid readings > 150°C)
@@ -302,7 +326,15 @@ class OmnikInverter:
         # Parse AC output power
         ac_power_raw = self._get_short(59, 1)
         ac_output_power = int(ac_power_raw) if ac_power_raw is not None else None
+        ac_power_2_raw = self._get_short(63, 1)
+        ac_output_power_2 = int(ac_power_2_raw) if ac_power_2_raw is not None else None
+        ac_power_3_raw = self._get_short(67, 1)
+        ac_output_power_3 = int(ac_power_3_raw) if ac_power_3_raw is not None else None
 
+        # Byte layout for the 2nd/3rd PV string and AC phase values: vpv/ipv/iac/vac
+        # each occupy a further 2-byte slot per string/phase (33/35/37, 39/41/43, ...).
+        # fac and pac are interleaved with each other (fac1,pac1,fac2,pac2,fac3,pac3),
+        # so both advance in 4-byte steps instead of 2.
         # Status is "Online" because we successfully received data via TCP connection
         # "Offline" status is only set by the coordinator when connection fails
         return OmnikInverterData(
@@ -314,11 +346,23 @@ class OmnikInverter:
             energy_total=self._get_long(71),
             hours_total=hours_total,
             dc_input_voltage=self._get_short(33),
+            dc_input_voltage_2=self._get_short(35),
+            dc_input_voltage_3=self._get_short(37),
             dc_input_current=self._get_short(39),
+            dc_input_current_2=self._get_short(41),
+            dc_input_current_3=self._get_short(43),
             ac_output_voltage=self._get_short(51),
+            ac_output_voltage_2=self._get_short(53),
+            ac_output_voltage_3=self._get_short(55),
             ac_output_current=self._get_short(45),
+            ac_output_current_2=self._get_short(47),
+            ac_output_current_3=self._get_short(49),
             ac_output_frequency=self._get_short(57, 100),
+            ac_output_frequency_2=self._get_short(61, 100),
+            ac_output_frequency_3=self._get_short(65, 100),
             ac_output_power=ac_output_power,
+            ac_output_power_2=ac_output_power_2,
+            ac_output_power_3=ac_output_power_3,
         )
 
     async def async_get_data(self) -> OmnikInverterData:
