@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
-import logging
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -14,7 +14,6 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    CONF_NAME,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfEnergy,

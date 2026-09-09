@@ -120,7 +120,7 @@ class OmnikInverter:
                 asyncio.open_connection(self._host, self._port),
                 timeout=self._timeout,
             )
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise OmnikConnectionError(
                 f"Connection to {self._host}:{self._port} timed out"
             ) from err
@@ -153,7 +153,7 @@ class OmnikInverter:
 
             return data
 
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise OmnikConnectionError(
                 f"Timeout waiting for response from {self._host}:{self._port}"
             ) from err
