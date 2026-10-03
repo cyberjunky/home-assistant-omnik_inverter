@@ -28,9 +28,25 @@ Monitor your Omnik Solar inverter with these sensors:
 - **AC Output Frequency** - Grid frequency (Hz)
 - **AC Output Power** - Grid power output (W)
 
-For inverters with multiple PV strings or AC phases, a 2nd and 3rd set of the DC/AC sensors above is also created (e.g. **DC Input Voltage 2**, **AC Output Power 3**). These are only created for the strings/phases your inverter actually reports.
+### Multiple PV strings and three-phase inverters
 
-All sensors are created by default and grouped under a single device for easy management.
+Inverters with more than one PV string (MPPT input) or more than one AC phase report a value per string and per phase. The integration supports up to **3 PV strings** and **3 AC phases** and adds a numbered sensor for each extra one:
+
+| Sensor | 1st string / phase | 2nd | 3rd |
+| --- | --- | --- | --- |
+| PV string voltage (V) | DC Input Voltage | DC Input Voltage 2 | DC Input Voltage 3 |
+| PV string current (A) | DC Input Current | DC Input Current 2 | DC Input Current 3 |
+| Phase voltage (V) | AC Output Voltage | AC Output Voltage 2 | AC Output Voltage 3 |
+| Phase current (A) | AC Output Current | AC Output Current 2 | AC Output Current 3 |
+| Phase frequency (Hz) | AC Output Frequency | AC Output Frequency 2 | AC Output Frequency 3 |
+| Phase power (W) | AC Output Power | AC Output Power 2 | AC Output Power 3 |
+
+- The extra sensors are detected automatically and only created for the strings and phases your inverter actually reports, so a single-string, single-phase inverter keeps just the sensors listed above.
+- A two-string, single-phase inverter gets **DC Input Voltage 2** and **DC Input Current 2**.
+- **Actual Power** is read from the same value as **AC Output Power** (the first phase). Three-phase inverters have not been verified on real hardware yet: if Actual Power shows only part of your production, add **AC Output Power**, **AC Output Power 2** and **AC Output Power 3** with a "Combine the state of several sensors" helper, and please open an issue so it can be fixed.
+- **Energy Today** and **Energy Total** are always totals for the whole inverter.
+
+All sensors are grouped under a single device for easy management.
 
 ## Screenshots
 
