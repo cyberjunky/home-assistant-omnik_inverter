@@ -68,20 +68,56 @@
             "dc_input_voltage": {
                 "name": "DC Input Voltage"
             },
+            "dc_input_voltage_2": {
+                "name": "DC Input Voltage 2"
+            },
+            "dc_input_voltage_3": {
+                "name": "DC Input Voltage 3"
+            },
             "dc_input_current": {
                 "name": "DC Input Current"
+            },
+            "dc_input_current_2": {
+                "name": "DC Input Current 2"
+            },
+            "dc_input_current_3": {
+                "name": "DC Input Current 3"
             },
             "ac_output_voltage": {
                 "name": "AC Output Voltage"
             },
+            "ac_output_voltage_2": {
+                "name": "AC Output Voltage 2"
+            },
+            "ac_output_voltage_3": {
+                "name": "AC Output Voltage 3"
+            },
             "ac_output_current": {
                 "name": "AC Output Current"
+            },
+            "ac_output_current_2": {
+                "name": "AC Output Current 2"
+            },
+            "ac_output_current_3": {
+                "name": "AC Output Current 3"
             },
             "ac_output_frequency": {
                 "name": "AC Output Frequency"
             },
+            "ac_output_frequency_2": {
+                "name": "AC Output Frequency 2"
+            },
+            "ac_output_frequency_3": {
+                "name": "AC Output Frequency 3"
+            },
             "ac_output_power": {
                 "name": "AC Output Power"
+            },
+            "ac_output_power_2": {
+                "name": "AC Output Power 2"
+            },
+            "ac_output_power_3": {
+                "name": "AC Output Power 3"
             }
         }
     }

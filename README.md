@@ -28,6 +28,8 @@ Monitor your Omnik Solar inverter with these sensors:
 - **AC Output Frequency** - Grid frequency (Hz)
 - **AC Output Power** - Grid power output (W)
 
+For inverters with multiple PV strings or AC phases, a 2nd and 3rd set of the DC/AC sensors above is also created (e.g. **DC Input Voltage 2**, **AC Output Power 3**). These are unavailable on single-string/single-phase inverters.
+
 All sensors are created by default and grouped under a single device for easy management.
 
 ## Screenshots
