@@ -1,13 +1,14 @@
 {
   "domain": "omnik_inverter",
   "name": "Omnik Inverter",
-  "version": "1.0.3",
-  "documentation": "https://github.com/cyberjunky/home-assistant-omnik_inverter/blob/master/README.md",
-  "issue_tracker": "https://github.com/cyberjunky/home-assistant-omnik_inverter/issues",
   "codeowners": [
     "@cyberjunky"
   ],
   "config_flow": true,
+  "documentation": "https://github.com/cyberjunky/home-assistant-omnik_inverter",
+  "integration_type": "device",
   "iot_class": "local_polling",
-  "requirements": []
+  "issue_tracker": "https://github.com/cyberjunky/home-assistant-omnik_inverter/issues",
+  "requirements": [],
+  "version": "1.1.0"
 }

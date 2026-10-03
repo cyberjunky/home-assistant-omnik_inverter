@@ -22,7 +22,7 @@ from homeassistant.const import (
     UnitOfTemperature,
     UnitOfTime,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -40,6 +40,9 @@ class OmnikSensorEntityDescription(SensorEntityDescription):
 
     value_fn: Callable[[OmnikInverterData], str | int | float | None]
 
+
+# Sensors for the 2nd/3rd PV string and AC phase; unused slots read as None
+OPTIONAL_KEY_SUFFIXES = ("_2", "_3")
 
 SENSOR_DESCRIPTIONS: tuple[OmnikSensorEntityDescription, ...] = (
     OmnikSensorEntityDescription(
@@ -296,10 +299,31 @@ async def async_setup_entry(
     """Set up Omnik Inverter sensors from a config entry."""
     coordinator: OmnikDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    async_add_entities(
-        OmnikSensorEntity(coordinator, entry, description)
-        for description in SENSOR_DESCRIPTIONS
-    )
+    added: set[str] = set()
+
+    @callback
+    def _async_add_sensors() -> None:
+        """Add sensors, skipping strings/phases the inverter doesn't report."""
+        new_descriptions = [
+            description
+            for description in SENSOR_DESCRIPTIONS
+            if description.key not in added
+            and (
+                not description.key.endswith(OPTIONAL_KEY_SUFFIXES)
+                or description.value_fn(coordinator.data) is not None
+            )
+        ]
+        if not new_descriptions:
+            return
+        added.update(description.key for description in new_descriptions)
+        async_add_entities(
+            OmnikSensorEntity(coordinator, entry, description)
+            for description in new_descriptions
+        )
+
+    _async_add_sensors()
+    # A string/phase may only show up in a later response (e.g. after a short reply)
+    entry.async_on_unload(coordinator.async_add_listener(_async_add_sensors))
 
 
 class OmnikSensorEntity(CoordinatorEntity[OmnikDataUpdateCoordinator], SensorEntity):

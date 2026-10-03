@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import replace
 from datetime import timedelta
-import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
@@ -39,6 +39,7 @@ class OmnikDataUpdateCoordinator(DataUpdateCoordinator[OmnikInverterData]):
             hass,
             _LOGGER,
             name=DOMAIN,
+            config_entry=entry,
             update_interval=timedelta(seconds=scan_interval),
         )
 
@@ -61,11 +62,15 @@ class OmnikDataUpdateCoordinator(DataUpdateCoordinator[OmnikInverterData]):
                 _LOGGER.debug(
                     "Returning last known data with Offline status"
                 )
+                last = self._last_successful_data
                 return replace(
-                    self._last_successful_data,
+                    last,
                     status="Offline",
                     actual_power=0,
                     ac_output_power=0,
+                    # Phases the inverter doesn't have stay None
+                    ac_output_power_2=None if last.ac_output_power_2 is None else 0,
+                    ac_output_power_3=None if last.ac_output_power_3 is None else 0,
                 )
 
             # No previous data available - must raise to indicate unavailable

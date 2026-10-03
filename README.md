@@ -28,7 +28,7 @@ Monitor your Omnik Solar inverter with these sensors:
 - **AC Output Frequency** - Grid frequency (Hz)
 - **AC Output Power** - Grid power output (W)
 
-For inverters with multiple PV strings or AC phases, a 2nd and 3rd set of the DC/AC sensors above is also created (e.g. **DC Input Voltage 2**, **AC Output Power 3**). These are unavailable on single-string/single-phase inverters.
+For inverters with multiple PV strings or AC phases, a 2nd and 3rd set of the DC/AC sensors above is also created (e.g. **DC Input Voltage 2**, **AC Output Power 3**). These are only created for the strings/phases your inverter actually reports.
 
 All sensors are created by default and grouped under a single device for easy management.
 
@@ -38,6 +38,7 @@ All sensors are created by default and grouped under a single device for easy ma
 
 ## Requirements
 
+- **Home Assistant 2026.3.0** or newer (Python 3.14)
 - **Omnik Solar Inverter** with network connectivity
 - **Inverter IP address** accessible from Home Assistant
 - **Inverter serial number** (found on the device label)
@@ -174,7 +175,7 @@ Then perform any steps to reproduce the issue and disable debug logging again. I
 Quick-start (from project root):
 
 ```bash
-python3 -m venv .venv
+python3.14 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements_lint.txt

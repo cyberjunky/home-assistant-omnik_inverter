@@ -4,13 +4,6 @@ from __future__ import annotations
 
 from typing import Final
 
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_NAME,
-    CONF_PORT,
-    CONF_SCAN_INTERVAL,
-)
-
 DOMAIN: Final = "omnik_inverter"
 
 # Configuration keys
