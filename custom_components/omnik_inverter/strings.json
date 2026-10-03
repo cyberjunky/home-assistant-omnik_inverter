@@ -18,12 +18,15 @@
                     "name": "Friendly name for your inverter",
                     "scan_interval": "How often to fetch data from the inverter (in seconds)"
                 }
+            },
+            "cannot_connect": {
+                "title": "Inverter not reachable",
+                "description": "Could not get a response from the inverter at {host}:{port}. Check the IP address, port and serial number. If the inverter is simply offline (for example at night), you can add it anyway and it will start reporting once it is online.",
+                "menu_options": {
+                    "user": "Change settings and try again",
+                    "add_offline": "Add anyway"
+                }
             }
-        },
-        "error": {
-            "cannot_connect": "Failed to connect to the inverter. Please check the IP address, port, and that the inverter is online.",
-            "invalid_serial": "Invalid serial number format",
-            "unknown": "An unexpected error occurred"
         },
         "abort": {
             "already_configured": "This inverter is already configured"

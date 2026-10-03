@@ -79,7 +79,7 @@ This integration is not yet in the default HACS repository. You need to add it a
    - **Name**: Friendly name prefix (default: "Omnik")
    - **Update Interval**: Seconds between updates (default: `60`)
 
-The integration validates your connection and creates all sensors automatically. Disable sensors you don't need via **Settings** → **Devices & Services** → **Omnik Inverter** → click a sensor → cogwheel icon → "Enable entity" toggle.
+The integration tests the connection and creates all sensors automatically. If the inverter does not respond (for example at night, when it is powered down), you can go back to correct the settings or choose **Add anyway**; it will start reporting once the inverter is online. Disable sensors you don't need via **Settings** → **Devices & Services** → **Omnik Inverter** → click a sensor → cogwheel icon → "Enable entity" toggle.
 
 ### Modifying Settings
 
@@ -180,6 +180,7 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements_lint.txt
 ./scripts/lint    # runs pre-commit + vulture
+./scripts/test    # runs the test suite with coverage
 # or: ruff check .
 # to auto-fix: ruff check . --fix
 ```

@@ -3,9 +3,9 @@
 This module handles async TCP communication with Omnik solar inverters.
 """
 
-from __future__ import annotations
 
 import asyncio
+import contextlib
 import logging
 import struct
 from dataclasses import dataclass
@@ -100,10 +100,8 @@ class OmnikInverter:
         Returns:
             Bytes containing the request message
         """
-        # Convert serial number to bytes (doubled and reversed)
-        double_hex = hex(serial_number)[2:] * 2
-        serial_bytes = bytearray.fromhex(double_hex)
-        serial_bytes.reverse()
+        # Serial number as 4 bytes, reversed (little-endian) and doubled
+        serial_bytes = serial_number.to_bytes(4, "little") * 2
 
         # Calculate checksum
         cs_count = 115 + sum(serial_bytes)
@@ -169,9 +167,14 @@ class OmnikInverter:
             raise OmnikConnectionError(
                 f"Timeout waiting for response from {self._host}:{self._port}"
             ) from err
+        except OSError as err:
+            raise OmnikConnectionError(
+                f"Connection to {self._host}:{self._port} lost: {err}"
+            ) from err
         finally:
             writer.close()
-            await writer.wait_closed()
+            with contextlib.suppress(OSError):
+                await writer.wait_closed()
 
     async def _async_fetch_data(self) -> bytes:
         """Fetch raw data from the inverter with retry logic.
@@ -395,5 +398,6 @@ class OmnikInverter:
         Raises:
             OmnikConnectionError: If connection fails
         """
-        await self._async_fetch_data()
+        # Single attempt, the config flow should not wait for retries
+        await self._async_single_fetch()
         return True
