@@ -4,13 +4,14 @@ from datetime import timedelta
 from unittest.mock import AsyncMock, patch
 
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import CONF_PORT
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.omnik_inverter.const import DOMAIN
 from custom_components.omnik_inverter.omnik import OmnikConnectionError, OmnikInverter
 
-from .conftest import build_message
+from .conftest import ENTRY_DATA, build_message
 
 
 async def test_setup_and_unload(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> None:
@@ -46,3 +47,17 @@ async def test_setup_retry_when_offline(
         await hass.async_block_till_done()
 
     assert mock_config_entry.state is ConfigEntryState.SETUP_RETRY
+
+
+async def test_float_port_from_older_entries(hass: HomeAssistant) -> None:
+    """Entries that stored the port as a float still connect on an int port."""
+    entry = MockConfigEntry(domain=DOMAIN, data={**ENTRY_DATA, CONF_PORT: 8899.0})
+    entry.add_to_hass(hass)
+
+    with patch.object(OmnikInverter, "_async_fetch_data", AsyncMock(return_value=build_message())):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+
+    port = hass.data[DOMAIN][entry.entry_id].inverter._port
+    assert port == 8899
+    assert isinstance(port, int)
