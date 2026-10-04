@@ -1,20 +1,12 @@
 {
   "customizations": {
-    "extensions": [
-      "charliermarsh.ruff",
-      "ms-python.python",
-      "github.vscode-pull-request-github",
-      "ryanluker.vscode-coverage-gutters",
-      "ms-python.vscode-pylance",
-      "GitHub.copilot"
-    ],
     "vscode": {
       "extensions": [
+        "charliermarsh.ruff",
         "GitHub.copilot",
         "github.vscode-pull-request-github",
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "ms-vscode.makefile-tools",
         "ryanluker.vscode-coverage-gutters"
       ],
       "settings": {
@@ -28,8 +20,7 @@
         "editor.formatOnType": true,
         "editor.rulers": [100],
         "files.trimTrailingWhitespace": true,
-        "python.formatting.provider": "ruff",
-        "python.pythonPath": "/usr/local/bin/python"
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
       }
     }
   },
@@ -48,7 +39,7 @@
     "8123": {
       "label": "Home Assistant"
     },
-    "8124-999999": {
+    "8124-65535": {
       "label": "Auto-Forwarded - Other",
       "onAutoForward": "ignore"
     }
