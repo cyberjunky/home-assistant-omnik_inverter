@@ -26,7 +26,7 @@ class OmnikDataUpdateCoordinator(DataUpdateCoordinator[OmnikInverterData]):
         """Initialize the coordinator."""
         self.inverter = OmnikInverter(
             host=entry.data[CONF_HOST],
-            port=entry.data[CONF_PORT],
+            port=int(entry.data[CONF_PORT]),
             serial_number=int(entry.data[CONF_SERIAL_NUMBER]),
         )
         self._last_successful_data = None
@@ -73,4 +73,4 @@ class OmnikDataUpdateCoordinator(DataUpdateCoordinator[OmnikInverterData]):
                 )
 
             # No previous data available - must raise to indicate unavailable
-            raise UpdateFailed(f"Error communicating with inverter: {err}") from err
+            raise UpdateFailed(str(err)) from err

@@ -19,7 +19,7 @@ if [ ! -f "${PWD}/config/configuration.yaml" ]; then
 logger:
   default: info
   logs:
-    custom_components.toon_boilerstatus: debug"
+    custom_components.omnik_inverter: debug" >> "${PWD}/config/configuration.yaml"
 fi
 
 # Set the python path to include our custom_components directory
