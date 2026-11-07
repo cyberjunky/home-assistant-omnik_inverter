@@ -4,7 +4,7 @@ import struct
 
 import pytest
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.omnik_inverter.const import CONF_SERIAL_NUMBER, DOMAIN
 

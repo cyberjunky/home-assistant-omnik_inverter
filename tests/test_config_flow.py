@@ -8,7 +8,7 @@ from homeassistant.config_entries import SOURCE_USER
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT, CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.omnik_inverter.const import CONF_SERIAL_NUMBER, DOMAIN
 from custom_components.omnik_inverter.omnik import OmnikConnectionError, OmnikInverter
